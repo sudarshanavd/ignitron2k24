@@ -1,4 +1,212 @@
-<!-- coordinator_detail.html -->
-<h1>Coordinator Details</h1>
-<p>Username: {{ coordinator.username }}</p>
-<p>Group: Coordinator</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinator Student Details</title>
+    <style>
+        /* Page background and font styling */
+        body {
+            background-color: rgb(0, 7, 28);
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Greeting text styling */
+        .greeting {
+            text-align: center;
+            font-size: 3em;
+            font-weight: bold;
+            font-family:monospace;
+            padding: 20px;
+            color: #e6e6e6;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #ffffff;
+            font-family:monospace;
+            font-size: 2em;
+        }
+
+        /* Search bar styling */
+        .search-bar {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px;
+            width: 250px;
+            border: 1px solid #009879;
+            border-radius: 5px;
+            font-size: 0.9em;
+            outline: none;
+        }
+
+        .search-bar input:hover{
+            box-shadow: 0 0 20px rgb(0, 255, 76);
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #009879;
+            color: #ffffff;
+            font-size: 0.9em;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .search-bar button:hover {
+            background-color: #007f63;
+            box-shadow: 0 0 20px rgb(0, 255, 76);
+        }
+
+        /* Table styling */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            font-family: Arial, sans-serif;
+            min-width: 400px;
+            box-shadow: 0 0 20px rgb(16, 16, 16);
+        }
+        .styled-table th, .styled-table td {
+            padding: 12px 15px 20px;
+            text-align: left;
+        }
+        .styled-table thead tr {
+            background-color: #009879;
+            color: #ab9d9d;
+            text-align: left;
+        }
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: rgba(204, 204, 204, 0.5);
+        }
+        .styled-table tbody tr:hover {
+            background-color: #167851;
+        }
+
+        /* Pagination styling */
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .pagination :hover{
+            box-shadow: 0 0 20px rgb(0, 255, 76);
+        }
+        .pagination a, .pagination span {
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #009879;
+            border: 1px solid #009879;
+            border-radius: 5px;
+        }
+        .pagination .current-page {
+            font-weight: bold;
+            background-color: #009879;
+            color: white;
+        }
+
+        /* Responsive styling for mobile */
+        @media (max-width: 768px) {
+            .styled-table {
+                font-size: 0.85em;
+            }
+
+            .styled-table th, .styled-table td {
+                padding: 12px 15px 20px;
+            }
+
+            .pagination {
+                font-size: 0.85em;
+            }
+            .pagination a, .pagination span {
+                padding: 6px 10px;
+                margin: 2px;
+            }
+
+            .styled-table thead th {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Coordinator Greeting -->
+<div class="greeting">Hi, {{user.username}}</div>
+
+<h2>Student Details for {{ event_name }}</h2>
+    
+<!-- Search Form -->
+<div class="search-bar">
+    <form method="get" action="">
+        <input type="text" name="q" placeholder="Search..." value="{{ query|default_if_none:'' }}" />
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+<!-- Student Details Table -->
+<table class="styled-table">
+    <thead>
+        <tr>
+            <th>S.No.</th>
+            <th>Team Name</th>
+            <th>Team Lead Name</th>
+            <th>Contact Number</th>
+            <th>Institute Name</th>
+            <th>District</th>
+            <th>Participant 2</th>
+            <th>Participant 3</th>
+            <th>Participant 4</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in page_obj %}
+        <tr>
+            <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+            <td>{{ student.team_name }}</td>
+            <td>{{ student.team_lead_name }}</td>
+            <td>{{ student.contact_number }}</td>
+            <td>{{ student.institute_name }}</td>
+            <td>{{ student.district }}</td>
+            <td>{{ student.participant_2 }}</td>
+            <td>{{ student.participant_3 }}</td>
+            <td>{{ student.participant_4 }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="9">No results found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="current-page">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
+    {% endif %}
+</div>
+
+</body>
+</html>

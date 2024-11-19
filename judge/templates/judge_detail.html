@@ -1,4 +1,148 @@
-<!-- judge_detail.html -->
-<h1>Judge Details</h1>
-<p>Username: {{ judge.username }}</p>
-<p>Group: Judge</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judge Dashboard</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+        }
+        h2, h3 {
+            color: #004aad;
+        }
+
+        /* Table styling */
+        .team-list {
+            width: 60%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .team-list th, .team-list td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .team-list tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* Divider line between columns */
+        .divider {
+            border-right: 1px solid #333;
+            padding-right: 10px;
+        }
+
+        /* Pagination styling */
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .pagination a, .pagination span {
+            margin: 0 5px;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #004aad;
+            border: 1px solid #004aad;
+            border-radius: 5px;
+        }
+        .pagination .current-page {
+            font-weight: bold;
+            background-color: #004aad;
+            color: white;
+        }
+
+        /* Search bar styling */
+        .search-bar {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-bar input[type="text"] {
+            padding: 8px;
+            width: 250px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .search-bar button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #004aad;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .team-list a {
+            text-decoration: none; 
+            color: #004aad; 
+        }
+
+        .team-list a:hover {
+            text-decoration: underline; 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome message -->
+    <h2>Welcome, Judge {{ username }}!</h2>
+    <h3>Event: {{ event_name }}</h3>
+    
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <form method="get">
+            <input type="text" name="q" placeholder="Search team name..." value="{{ query|default_if_none:'' }}"">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    
+    <!-- Team list table -->
+    <table class="team-list">
+        <thead>
+            <tr>
+                <th class="divider">S.No.</th>
+                <th>Team Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in page_obj %}
+            <tr>
+                <td class="divider">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td>
+                    <a href="{% url 'judge:judge_evaluation' event_name=event_name username=username team_name=student.team_name %}">
+                        {{ student.team_name }}
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No teams found for this event.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="current-page">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+
+</body>
+</html>
