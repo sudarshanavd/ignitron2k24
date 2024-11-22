@@ -82,10 +82,14 @@ WSGI_APPLICATION = 'ignitron.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'u269237412_ignitron',
+		'USER': 'u269237412_ignitron',
+		'PASSWORD': 'Ignitron2k24',
+		'HOST':'pavanvarahad.in',
+		'PORT':'3306',
+	}
 }
 
 
