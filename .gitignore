@@ -1,0 +1,23 @@
+# Ignore the .env file
+.env
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+
+# Ignore the Django static and media directories (if applicable)
+staticfiles/
+media/
+db.sqlite3
+
+#excel 
+student_participations_details.xlsx
+users_data.xlsx
+
+# Ignore the venv-django folder
+venv-django/
+Pipfile
+
+# IDE settings
+.vscode/
+.idea/
